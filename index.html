@@ -1,0 +1,452 @@
+
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Parking Management System</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Khmer OS Battambang", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eaf1fa, #dce8f7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    color: #172b4d;
+}
+
+.container {
+    width: 100%;
+    max-width: 1250px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+}
+
+/* Main Cards */
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 12px 35px rgba(20, 45, 85, 0.10);
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.header h2 {
+    font-size: 25px;
+    color: #142c50;
+    margin-bottom: 8px;
+}
+
+.header p {
+    color: #8292a8;
+    font-size: 14px;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 9px;
+    color: #314766;
+}
+
+input, select {
+    width: 100%;
+    height: 55px;
+    padding: 0 16px;
+    border: 1px solid #dce5f0;
+    border-radius: 10px;
+    background: #f8fafd;
+    color: #243b5a;
+    font-size: 16px;
+    outline: none;
+    transition: .3s;
+}
+
+input:focus, select:focus {
+    border-color: #16b8c5;
+    box-shadow: 0 0 0 3px rgba(22,184,197,.12);
+}
+
+input[readonly] {
+    background: #edf4fb;
+    font-weight: bold;
+}
+
+/* Button */
+button {
+    width: 100%;
+    height: 56px;
+    background: linear-gradient(135deg, #1479ca, #16b8c5);
+    border: none;
+    border-radius: 11px;
+    color: white;
+    font-size: 19px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .3s;
+    margin-top: 5px;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(22,184,197,.25);
+}
+
+/* Price Card */
+.price-card {
+    background: #142b4d;
+    color: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 12px 35px rgba(20,45,85,.18);
+}
+
+.price-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.price-header h2 {
+    font-size: 25px;
+    color: white;
+}
+
+.price-header p {
+    color: #a7bdd8;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+/* Vehicle Price */
+.vehicle-box {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 20px;
+}
+
+.vehicle-box h3 {
+    color: #36d5df;
+    font-size: 21px;
+    margin-bottom: 15px;
+}
+
+.vehicle-box p {
+    color: #e0e9f5;
+    font-size: 16px;
+    line-height: 2.2;
+}
+
+/* Result */
+.result {
+    display: none;
+    background: white;
+    color: #172b4d;
+    border-radius: 14px;
+    padding: 22px;
+    margin-top: 25px;
+    animation: fade .4s ease;
+}
+
+@keyframes fade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result h3 {
+    color: #1479ca;
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #edf1f6;
+    font-size: 15px;
+}
+
+.result-row strong {
+    color: #1479ca;
+    text-align: right;
+}
+
+.total {
+    margin-top: 18px;
+    padding: 18px;
+    background: #e7f9fa;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.total span {
+    display: block;
+    color: #60768d;
+    font-size: 14px;
+}
+
+.total h2 {
+    color: #0799a7;
+    font-size: 30px;
+    margin-top: 5px;
+}
+
+.dollar {
+    text-align: center;
+    color: #657b92;
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+#error {
+    color: #d62828;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.footer {
+    text-align: center;
+    color: #a8bdd4;
+    margin-top: 25px;
+    font-size: 12px;
+}
+
+/* Responsive */
+@media(max-width: 850px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 500px) {
+    body {
+        padding: 15px;
+    }
+
+    .card, .price-card {
+        padding: 23px 18px;
+    }
+
+    .header h2, .price-header h2 {
+        font-size: 21px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LEFT: PARKING FORM -->
+    <div class="card">
+
+        <div class="header">
+            <h2>ប្រព័ន្ធគណនាថ្លៃចតយានយន្ត</h2>
+            <p>Parking Management System</p>
+        </div>
+
+        <div class="form-group">
+            <label>ជ្រើសរើសប្រភេទយានយន្ត</label>
+
+            <select id="vehicle">
+                <option value="car">🚗 ឡាន</option>
+                <option value="motorcycle">🏍️ ម៉ូតូ</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>🕒 ថ្ងៃ និងម៉ោងចូល</label>
+            <input type="datetime-local" id="startTime">
+        </div>
+
+        <div class="form-group">
+            <label>🕒 ថ្ងៃ និងម៉ោងចេញ</label>
+            <input type="datetime-local" id="endTime">
+        </div>
+
+        <div class="form-group">
+            <label>រយៈពេលចត</label>
+            <input type="text" id="duration"
+                   placeholder="រយៈពេលចត" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>តម្លៃសរុប (រៀល)</label>
+            <input type="text" id="total"
+                   placeholder="តម្លៃសរុប" readonly>
+        </div>
+
+        <button onclick="calculate()">
+            គណនាតម្លៃចត
+        </button>
+
+        <div id="error"></div>
+
+    </div>
+
+
+    <!-- RIGHT: PRICE AND RESULT -->
+    <div class="price-card">
+
+        
+        <!-- RESULT -->
+        <div class="result" id="resultBox">
+
+            <h3>📋 ប្រាក់ដែលត្រូវបង់</h3>
+
+            <div class="result-row">
+                <span>ប្រភេទយានយន្ត</span>
+                <strong id="resultVehicle"></strong>
+            </div>
+
+            <div class="result-row">
+                <span>រយៈពេលចត</span>
+                <strong id="resultDuration"></strong>
+            </div>
+
+            <div class="result-row">
+                <span>តម្លៃក្នុង 1 ម៉ោង</span>
+                <strong id="resultRate"></strong>
+            </div>
+
+            <div class="total">
+                <span>តម្លៃសរុប</span>
+                <h2 id="resultRiel">0 ៛</h2>
+            </div>
+
+            <div class="dollar">
+                តម្លៃជាដុល្លារ:
+                <strong id="resultDollar">$0.00</strong>
+            </div>
+
+        </div>
+
+        <div class="footer">
+           <button>Payment</button>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+// Exchange Rate
+const EXCHANGE_RATE = 4100;
+
+function calculate() {
+
+    const vehicle =
+        document.getElementById("vehicle").value;
+
+    const start =
+        document.getElementById("startTime").value;
+
+    const end =
+        document.getElementById("endTime").value;
+
+    const error =
+        document.getElementById("error");
+
+    error.innerText = "";
+
+    if (!start || !end) {
+        error.innerText =
+            "សូមបញ្ចូលថ្ងៃ និងម៉ោងចូលចេញជាមុន!";
+        return;
+    }
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const difference = endDate - startDate;
+
+    if (difference <= 0) {
+        error.innerText =
+            "ម៉ោងចេញត្រូវតែធំជាងម៉ោងចូល!";
+        return;
+    }
+
+    // Calculate Hours
+    const hours = difference / (1000 * 60 * 60);
+
+    // Round up
+    const billableHours = Math.ceil(hours);
+
+    // Determine Rate
+    let rate;
+
+    if (vehicle === "car") {
+
+        rate = billableHours <= 8 ? 500 : 1000;
+
+    } else {
+
+        rate = billableHours <= 8 ? 200 : 300;
+
+    }
+
+    // Total Price
+    const price = billableHours * rate;
+
+    // Dollar
+    const dollar = price / EXCHANGE_RATE;
+
+    // Display Left Form
+    document.getElementById("duration").value =
+        billableHours + " ម៉ោង";
+
+    document.getElementById("total").value =
+        price.toLocaleString("en-US") + " ៛";
+
+    // Display Result
+    document.getElementById("resultVehicle").innerText =
+        vehicle === "car" ? "ឡាន 🚗" : "ម៉ូតូ 🏍️";
+
+    document.getElementById("resultDuration").innerText =
+        billableHours + " ម៉ោង";
+
+    document.getElementById("resultRate").innerText =
+        rate.toLocaleString("en-US") + " ៛";
+
+    document.getElementById("resultRiel").innerText =
+        price.toLocaleString("en-US") + " ៛";
+
+    document.getElementById("resultDollar").innerText =
+        "$" + dollar.toFixed(2);
+
+    document.getElementById("resultBox").style.display =
+        "block";
+}
+
+</script>
+
+</body>
+</html>
